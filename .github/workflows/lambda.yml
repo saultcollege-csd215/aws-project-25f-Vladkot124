@@ -23,6 +23,7 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: us-east-1
 
-      - name: Deploy
+      - name: Deploy Lambda
         run: |
+          chmod +x resources/deploy_lambda.sh
           bash resources/deploy_lambda.sh
