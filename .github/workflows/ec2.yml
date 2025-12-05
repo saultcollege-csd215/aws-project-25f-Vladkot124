@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows: ["Test"]
     types: [completed]
+    branches: [aws-project]
   workflow_dispatch:
 
 jobs:

@@ -4,18 +4,18 @@ on:
   workflow_run:
     workflows: ["Test"]
     types: [completed]
+    branches: [aws-project]
   workflow_dispatch:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -23,6 +23,4 @@ jobs:
           aws-region: us-east-1
 
       - name: Deploy
-        run: |
-          chmod +x resources/deploy_lambda.sh
-          bash resources/deploy_lambda.sh
+        run: bash resources/deploy_lambda.sh
