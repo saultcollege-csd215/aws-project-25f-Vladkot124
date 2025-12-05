@@ -22,4 +22,5 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
           script: |
-            bash -s < resources/deploy_ec2.sh
+            set -e
+            curl -fsSL https://raw.githubusercontent.com/saultcollege-csd215/aws-project-25f-Vladkot124/main/resources/deploy_ec2.sh | bash
