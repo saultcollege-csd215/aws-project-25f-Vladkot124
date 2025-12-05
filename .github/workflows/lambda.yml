@@ -1,16 +1,15 @@
-name: Lambda Deploy
+name: Deploy Lambda
 
 on:
   workflow_run:
     workflows: ["Test"]
-    types:
-      - completed
+    types: [completed]
   workflow_dispatch:
 
 jobs:
-  deploy-lambda:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -23,8 +22,7 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: us-east-1
 
-      - name: Make script executable
-        run: chmod +x resources/deploy_lambda.sh
-
-      - name: Deploy Lambda
-        run: ./resources/deploy_lambda.sh
+      - name: Deploy
+        run: |
+          chmod +x resources/deploy_lambda.sh
+          bash resources/deploy_lambda.sh
