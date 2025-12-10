@@ -1,13 +1,14 @@
 #!/bin/bash
+set -e
 
-# This gets run ON the EC2 instance (NOT in the GitHub Actions runner)
-
+# Runs ON the EC2 instance
 cd /home/ec2-user/dice
 
-git pull
-
-git fetch -all
-git switch main
+# Make sure we are on main and fully match origin/main
+git fetch --all
+git switch main || git checkout -b main
+git reset --hard origin/main
 
 sudo systemctl restart diceapp
 sudo systemctl status diceapp --no-pager -l
+echo "Deployment to EC2 instance completed."
