@@ -19,12 +19,16 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
-          script_stop: true
           script: |
             set -e
             cd /home/ec2-user/dice
+
+            # Fix "dubious ownership"
+            git config --global --add safe.directory /home/ec2-user/dice
+
             git fetch --all
             git switch main
             git pull origin main
+
             sudo systemctl restart diceapp
             sudo systemctl status diceapp --no-pager -l

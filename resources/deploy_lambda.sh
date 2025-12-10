@@ -28,7 +28,7 @@ echo "[3/4] Packaging the Lambda function..."
 echo "[4/4] Deploying to AWS Lambda..."
 aws lambda update-function-code \
   --function-name "$LAMBDA_NAME" \
-  --zip-file "fileb://$ZIP_FILE" \
+  --zip-file fileb://"$ZIP_FILE" \
   --region "$REGION"
 
 echo "--- Deployment completed for $LAMBDA_NAME ---"
