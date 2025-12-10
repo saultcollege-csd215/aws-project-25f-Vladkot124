@@ -6,5 +6,8 @@ cd /home/ec2-user/dice
 
 git pull
 
+git fetch -all
+git switch main
+
 sudo systemctl restart diceapp
 sudo systemctl status diceapp --no-pager -l

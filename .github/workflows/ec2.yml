@@ -20,6 +20,7 @@ jobs:
           echo "DEPLOY_SCRIPT<<'EOF'" >> $GITHUB_ENV
           cat resources/deploy_ec2.sh >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+      
 
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
