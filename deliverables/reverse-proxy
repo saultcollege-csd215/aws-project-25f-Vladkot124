@@ -1,0 +1,19 @@
+# Nginx Reverse Proxy in This Project
+
+In this project, the Flask dice application does not listen directly on port 80 (the normal HTTP port that users connect to). Instead, it runs only on `localhost` on an internal port (for example `127.0.0.1:5000`). The Nginx web server is placed in front of the Flask app and acts as a **reverse proxy**. Nginx listens on port 80 for all incoming HTTP requests and then forwards those requests to the Flask app running on the internal port.
+
+Using Nginx as a reverse proxy gives several benefits in this setup:
+
+1. **Security and isolation**  
+   The Flask app is never exposed directly to the internet. Only Nginx is reachable from outside the EC2 instance. Nginx forwards valid requests to `127.0.0.1:5000`, so the application is protected behind the web server and only has to trust traffic coming from the local machine.
+
+2. **Cleaner client URLs and ports**  
+   Users can access the app with a simple URL like `http://<public-ec2-ip>/roll/d6?n=5` without needing to know the internal port number. Nginx hides the fact that the Flask app is running on a different port.
+
+3. **Better performance and reliability**  
+   Nginx is optimized for handling many HTTP connections efficiently. It can queue and buffer requests, and it can serve static files directly if needed. This takes some load away from the Flask app and can make the overall system more stable.
+
+4. **Easier future changes**  
+   If the internal app changes (for example, a different port, a different framework, or multiple app instances), we can update only the Nginx configuration. Clients keep using the same public URL and do not need to be updated.
+
+In summary, Nginx as a reverse proxy lets us keep the Flask app simple while Nginx handles HTTP details, security, and routing from the outside world to the internal application.
