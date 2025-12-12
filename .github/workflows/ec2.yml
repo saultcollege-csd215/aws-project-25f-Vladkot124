@@ -13,19 +13,25 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Load deploy script into env
-        run: |
-          echo "DEPLOY_SCRIPT<<'EOF'" >> $GITHUB_ENV
-          cat resources/deploy_ec2.sh >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
-          script: ${{ env.DEPLOY_SCRIPT }}
+          script: |
+            set -e
+            cd /home/ec2-user/dice
+
+            # Fix permissions so git can write FETCH_HEAD
+            sudo chown -R ec2-user:ec2-user /home/ec2-user/dice
+
+            # Fix "dubious ownership"
+            git config --global --add safe.directory /home/ec2-user/dice
+
+            # Update repo to latest main
+            git fetch --all
+            git reset --hard origin/main
+
+            sudo systemctl restart diceapp
+            sudo systemctl status diceapp --no-pager -l
