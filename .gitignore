@@ -11,4 +11,4 @@ terraform.tfstate.backup
 
 lambda_package
 lambda_function.zip
-lambda-out.txt
+lambda-out.txtcsd215-keypair.pem
